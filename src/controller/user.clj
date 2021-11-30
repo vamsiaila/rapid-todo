@@ -2,16 +2,18 @@
   (:require [shared.response :as response-handler]
             [shared.auth :as auth]
             [validation.user :as user-validator]
-            [database.user :as user-db]))
+            [database.user :as user-db]
+  )
+)
 
 (defn register-user
   [{body-params :body-params}]
   ; step-1 validate incoming request using validation package
-  (let [error (user-validator/validate-register body-params)]
+  (let [error (user-validator/validate-user-register body-params)]
     (if (not= error nil)
       (response-handler/exception-validation error)
       ; step-2 add user to database using database package
-      (let [{exception :exception message :message user-id :user-id} (user-db/add-user-to-db body-params)]
+      (let [{exception :exception message :message user-id :user-id name :name} (user-db/add-user-to-db body-params)]
         (if (not= exception nil)
           (exception message)
           ; step-3 generate token with user id as payload
@@ -19,27 +21,59 @@
             (if (not= exception nil)
               (exception message)
               ; step-4 return the token in response
-              (response-handler/success-response {:token token}))
+              (response-handler/success-response {:token token :name name})
             )
           )
         )
       )
     )
   )
+)
 
 (defn login-user
-  [request]
+  [{body-params :body-params}]
   ; step-1 validate incoming request using validation package
-  ; step-2 get user from database using database package
-  ; step-3 generate token with user id as payload
-  ; step-4 return the token in response
-  (response-handler/success-response {:token "123456789"})
+  (let [error (user-validator/validate-user-login body-params)]
+    (if (not= error nil)
+      (response-handler/exception-validation error)
+      ; step-2 match user credentials with database using database package
+      (let [{exception :exception message :message user-id :user-id name :name} (user-db/match-user-credentials-with-db body-params)]
+        (if (not= exception nil)
+          (exception message)
+          ; step-3 generate token with user id as payload
+          (let [{exception :exception message :message token :token} (auth/create-auth-token user-id)]
+            (if (not= exception nil)
+              (exception message)
+              ; step-4 return the token in response
+              (response-handler/success-response {:token token :name name})
+            )
+          )
+        )
+      )
+    )
   )
+)
 
 (defn verify-user-token
-  [request]
+  [{headers :headers}]
   ; step-1 validate incoming request using validation package
-  ; step-3 verify token
-  ; step-4 return the boolean in response
-  (response-handler/success-response {:valid true})
+  (let [error (user-validator/validate-user-verify headers)]
+    (if (not= error nil)
+      (response-handler/exception-validation error)
+      ; step-2 verify token
+      (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
+        (if (not= exception nil)
+          (exception message)
+          ; step-3 find user in db
+          (let [{exception :exception message :message name :name} (user-db/find-user-with-id-in-db user-id)]
+            (if (not= exception nil)
+              (exception message)
+              ; step-4 return the name and id in response
+              (response-handler/success-response {:user-id user-id :name name})
+            )
+          )
+        )
+      )
+    )
   )
+)
