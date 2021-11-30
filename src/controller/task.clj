@@ -1,128 +1,128 @@
-(ns controller.list
+(ns controller.task
   (:require [shared.response :as response-handler]
-            [validation.list :as list-validator]
+            [validation.task :as task-validator]
             [shared.response :as response-handler]
             [shared.auth :as auth]
-            [database.list :as list-db]
+            [database.task :as task-db]
+            )
   )
-)
 
-(defn add-item-to-list
+(defn add-task-to-user-tasks
   [{body-params :body-params headers :headers}]
   ; step-1 validate incoming request using validation package
-  (let [error (list-validator/validate-add-item-to-list body-params headers)]
+  (let [error (task-validator/validate-add-task-to-user-tasks body-params headers)]
     (if (not= error nil)
       (response-handler/exception-validation error)
       ; step-2 validate token and get user-id
       (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
         (if (not= exception nil)
           (exception message)
-          ; step-3 add item to database using database package
-          (let [{exception :exception message :message data :data} (list-db/add-item-to-db body-params user-id)]
+          ; step-3 add task to database using database package
+          (let [{exception :exception message :message data :data} (task-db/add-user-task-to-db body-params user-id)]
             (if (not= exception nil)
               (exception message)
-              ; step-4 return the item with id in response
+              ; step-4 return the task with id in response
               (response-handler/success-response data)
+              )
             )
           )
         )
       )
     )
   )
-)
 
-(defn get-list-items
+(defn get-user-tasks
   [{headers :headers}]
   ; step-1 validate incoming request using validation package
-  (let [error (list-validator/validate-get-list-items headers)]
+  (let [error (task-validator/validate-get-user-tasks headers)]
     (if (not= error nil)
       (response-handler/exception-validation error)
       ; step-2 validate token and get user-id
       (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
         (if (not= exception nil)
           (exception message)
-          ; step-3 retrieve all items of the user
-          (let [{exception :exception message :message data :data} (list-db/get-items-from-db user-id)]
+          ; step-3 retrieve all tasks of the user
+          (let [{exception :exception message :message data :data} (task-db/get-user-tasks-from-db user-id)]
             (if (not= exception nil)
               (exception message)
-              ; step-4 return the items in response
+              ; step-4 return the tasks in response
               (response-handler/success-response data)
+              )
             )
           )
         )
       )
     )
   )
-)
 
-(defn update-item-in-list
+(defn update-user-task
   [{body-params :body-params headers :headers}]
   ; step-1 validate incoming request using validation package
-  (let [error (list-validator/validate-update-item-in-list body-params headers)]
+  (let [error (task-validator/validate-update-user-task body-params headers)]
     (if (not= error nil)
       (response-handler/exception-validation error)
       ; step-2 validate token and get user-id
       (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
         (if (not= exception nil)
           (exception message)
-          ; step-3 update item in the database using database package
-          (let [{exception :exception message :message data :data} (list-db/update-item-in-db body-params user-id)]
+          ; step-3 update task in the database using database package
+          (let [{exception :exception message :message data :data} (task-db/update-user-task-in-db body-params user-id)]
             (if (not= exception nil)
               (exception message)
-              ; step-4 return updated item in response
+              ; step-4 return updated task in response
               (response-handler/success-response data)
+              )
             )
           )
         )
       )
     )
   )
-)
 
-(defn mark-item-in-list-as-complete
+(defn mark-user-task-as-complete
   [{body-params :body-params headers :headers}]
   ; step-1 validate incoming request using validation package
-  (let [error (list-validator/validate-mark-item-in-list-as-complete body-params headers)]
+  (let [error (task-validator/validate-mark-user-task-as-complete body-params headers)]
     (if (not= error nil)
       (response-handler/exception-validation error)
       ; step-2 validate token and get user-id
       (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
         (if (not= exception nil)
           (exception message)
-          ; step-3 update item in the database using database package
-          (let [{exception :exception message :message data :data} (list-db/update-item-as-complete-in-db (:item-id body-params) user-id)]
+          ; step-3 update task as complete in the database using database package
+          (let [{exception :exception message :message data :data} (task-db/update-user-task-as-complete-in-db (:task-id body-params) user-id)]
             (if (not= exception nil)
               (exception message)
-              ; step-4 return updated item in response
+              ; step-4 return updated task in response
               (response-handler/success-response data)
+              )
             )
           )
         )
       )
     )
   )
-)
 
-(defn delete-item-in-list
+(defn delete-user-task
   [{headers :headers path-params :path-params}]
   ; step-1 validate incoming request using validation package
-  (let [error (list-validator/validate-delete-item-in-list path-params headers)]
+  (let [error (task-validator/validate-delete-user-task path-params headers)]
     (if (not= error nil)
       (response-handler/exception-validation error)
       ; step-2 validate token and get user-id
       (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
         (if (not= exception nil)
           (exception message)
-          ; step-3 update item in the database using database package
-          (let [{exception :exception message :message data :data} (list-db/delete-item-in-db (:item-id path-params) user-id)]
+          ; step-3 delete task in the database using database package
+          (let [{exception :exception message :message data :data} (task-db/delete-user-task-in-db (:task-id path-params) user-id)]
             (if (not= exception nil)
               (exception message)
-              ; step-4 return updated item in response
+              ; step-4 return delete status in response
               (response-handler/success-response data)
+              )
             )
           )
         )
       )
     )
   )
-)

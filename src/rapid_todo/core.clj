@@ -5,7 +5,7 @@
             [reitit.ring.middleware.muuntaja :as muuntaja]
             [database.db :as db]
             [routes.user :as user-routes]
-            [routes.list :as list-routes])
+            [routes.task :as task-routes])
   (:gen-class))
 
 (defn string-handler
@@ -20,7 +20,7 @@
       ["/api"
        ["" string-handler]
        ["/users" (user-routes/get-user-routes)]
-       ["/lists" (list-routes/get-list-routes)]
+       ["/tasks" (task-routes/get-task-routes)]
        ]
       {:data {:muuntaja m/instance
               :middleware [muuntaja/format-middleware]}}
