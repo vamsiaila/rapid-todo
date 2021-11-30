@@ -1,44 +1,23 @@
-# rapid-todo
+# Rapid Todo
 
-FIXME: description
+## Required
+Download and install [Leiningen](https://leiningen.org/) and [Java SDK](https://www.oracle.com/java/technologies/downloads/).
 
-## Installation
+## Start Server
+Execute command from project folder
 
-Download from http://example.com/FIXME.
+    $ lein run
 
-## Usage
 
-FIXME: explanation
+## What are available
+Download and import [Postman](https://www.getpostman.com/collections/78b78dba940e1a52ab36) collection.
 
-    $ java -jar rapid-todo-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2021 FIXME
-
-This program and the accompanying materials are made available under the
-terms of the Eclipse Public License 2.0 which is available at
-http://www.eclipse.org/legal/epl-2.0.
-
-This Source Code may also be made available under the following Secondary
-Licenses when the conditions for such availability set forth in the Eclipse
-Public License, v. 2.0 are satisfied: GNU General Public License as published by
-the Free Software Foundation, either version 2 of the License, or (at your
-option) any later version, with the GNU Classpath Exception which is available
-at https://www.gnu.org/software/classpath/license.html.
+- Users
+  - Register
+  - Login
+  - Verify Token
+- Tasks
+  - Add Task
+  - Update Task
+  - Mark Task As Complete
+  - Delete Task
