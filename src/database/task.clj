@@ -46,15 +46,21 @@
     (let [user-tasks (find-maps (db/get-connection) tasks-coll {:user-id (ObjectId. (str user-id))} {:user-id 0})]
       (if (= (count user-tasks) 0)
         {:exception exception/exception-not-found :message "No tasks available."}
-        {:data user-tasks}
-        )
+        {:data
+         (map
+           (fn [{task-id :_id task-name :task-name priority :priority completed :completed}]
+             {:task-id (str task-id) :task-name task-name :priority priority :completed completed}
+             )
+           user-tasks)
+         }
       )
+    )
     (catch RuntimeException e
       (println (.getMessage e))
       {:exception exception/exception-unknown-error :message (.getMessage e) }
-      )
     )
   )
+)
 
 (defn update-user-task-in-db
   [{task-id :task-id task-name :task-name priority :priority} user-id]
