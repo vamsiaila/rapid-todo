@@ -7,7 +7,8 @@
                  [ring "1.9.4"]
                  [metosin/reitit "0.5.15"]
                  [metosin/muuntaja "0.6.8"]
-                 [com.novemberain/monger "3.1.0"]]
+                 [com.novemberain/monger "3.1.0"]
+                 [buddy/buddy-sign "3.4.1"]]
   :main ^:skip-aot rapid-todo.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all

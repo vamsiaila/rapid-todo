@@ -1,5 +1,5 @@
 (ns controller.list
-  (:require [controller.response :as response-handler]))
+  (:require [shared.response :as response-handler]))
 
 (defn add-item-to-list
   [request]

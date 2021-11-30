@@ -1,4 +1,4 @@
-(ns controller.response)
+(ns shared.response)
 
 (defn success-response
   [data]
@@ -21,6 +21,6 @@
    :body {:error message}})
 
 (defn exception-unknown-error
-  []
+  [stack]
   {:status 500
-   :body {:error "Something went wrong. please try again"}})
+   :body {:error "Something went wrong. please try again" :stack stack}})
