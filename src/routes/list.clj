@@ -1,4 +1,5 @@
-(ns routes.list)
+(ns routes.list
+  (:require [controller.list :as list-controller]))
 
 (defn temp-list-handler
   [_]
@@ -7,8 +8,9 @@
 
 (defn get-list-routes
   []
-  ["/add" {:post temp-list-handler}]
-  ["/get" {:get temp-list-handler}]
-  ["/update" {:put temp-list-handler}]
-  ["/delete" {:delete temp-list-handler}]
+  [["/add" {:post list-controller/add-item-to-list}]
+  ["/get" {:get list-controller/get-list-items}]
+  ["/update" {:put list-controller/update-item-in-list}]
+  ["/complete" {:put list-controller/mark-item-in-list-as-complete}]
+  ["/delete/:itemId" {:delete list-controller/delete-item-in-list}]]
   )

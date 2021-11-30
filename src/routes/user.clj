@@ -1,13 +1,9 @@
-(ns routes.user)
-
-(defn temp-user-handler
-  [_]
-  {:status 200
-   :body "to be replaced with the real handler"})
+(ns routes.user
+  (:require [controller.user :as user-controller]))
 
 (defn get-user-routes
   []
-  ["/register" {:post temp-user-handler}]
-  ["/login" {:post temp-user-handler}]
-  ["/verify" {:get temp-user-handler}]
+  [["/register" {:post user-controller/register-user}]
+  ["/login" {:post user-controller/login-user}]
+  ["/verify" {:get user-controller/verify-user-token}]]
   )
