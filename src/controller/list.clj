@@ -65,8 +65,14 @@
       (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
         (if (not= exception nil)
           (exception message)
-          ; TODO: update item
-          ()
+          ; step-3 update item in the database using database package
+          (let [{exception :exception message :message data :data} (list-db/update-item-in-db body-params user-id)]
+            (if (not= exception nil)
+              (exception message)
+              ; step-4 return updated item in response
+              (response-handler/success-response data)
+            )
+          )
         )
       )
     )
@@ -83,8 +89,14 @@
       (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
         (if (not= exception nil)
           (exception message)
-          ; TODO: mark item as complete
-          ()
+          ; step-3 update item in the database using database package
+          (let [{exception :exception message :message data :data} (list-db/update-item-as-complete-in-db (:item-id body-params) user-id)]
+            (if (not= exception nil)
+              (exception message)
+              ; step-4 return updated item in response
+              (response-handler/success-response data)
+            )
+          )
         )
       )
     )
@@ -93,7 +105,6 @@
 
 (defn delete-item-in-list
   [{headers :headers path-params :path-params}]
-  (println path-params)
   ; step-1 validate incoming request using validation package
   (let [error (list-validator/validate-delete-item-in-list path-params headers)]
     (if (not= error nil)
@@ -102,8 +113,14 @@
       (let [{exception :exception message :message user-id :user-id} (auth/validate-token-and-return-user-id (headers "authorization"))]
         (if (not= exception nil)
           (exception message)
-          ; TODO: delete item from db
-          ()
+          ; step-3 update item in the database using database package
+          (let [{exception :exception message :message data :data} (list-db/delete-item-in-db (:item-id path-params) user-id)]
+            (if (not= exception nil)
+              (exception message)
+              ; step-4 return updated item in response
+              (response-handler/success-response data)
+            )
+          )
         )
       )
     )

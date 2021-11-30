@@ -31,7 +31,7 @@
     (let [{item-id :item-id value :value priority :priority} body-params]
       (if (or (not= (type item-id) String) (not= (count item-id) 24))
         "Valid item id required."
-        (if (or (not= (type value) String) (< (count name) 3))
+        (if (or (not= (type value) String) (< (count value) 3))
           "Value must present and more than 3 characters."
           (if (or (not= (type priority) String) (and (not= priority "low") (not= priority "medium") (not= priority "high")))
             "Priority must present and its value cannot be other than 'low' or 'medium' or 'high'."
